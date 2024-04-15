@@ -13,7 +13,7 @@ export default (page, sort) => {
   } else if (sort === 'old') {
     posts = sortBy(Posts, 'created');
   } else if (sort === 'top') {
-    posts = sortBy(Posts, 'votes', true);
+    posts = Posts.slice().sort((a, b) => b.votes - a.votes);
   } else {
     posts = [...Posts];
   }
