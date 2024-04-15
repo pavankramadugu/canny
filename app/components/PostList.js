@@ -14,11 +14,9 @@ import './css/_PostList.css';
     posts: posts.posts,
   }),
   (dispatch) => ({
-    fetchPosts: (params) => {
-      dispatch(fetchPosts(params));
-      return dispatch(recountVotes());
-    },
-    loadPosts: () => dispatch(loadPosts()),
+     fetchPosts: (params) => dispatch(fetchPosts(params)),
+     loadPosts: () => dispatch(loadPosts()),
+     recountVotes: () => dispatch(recountVotes()),
   })
 )
 export default class PostList extends Component {
@@ -32,7 +30,8 @@ export default class PostList extends Component {
   }
 
   async getPosts(page) {
-    this.props.fetchPosts({ page });
+      await this.props.fetchPosts({ page });
+      this.props.recountVotes();
   }
 
   render() {

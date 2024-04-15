@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import { fetchPosts, recountVotes } from '../actions/posts';
+import {fetchPosts, loadPosts, recountVotes} from '../actions/posts';
 import { changeSort } from '../actions/sort';
 
 import './css/_PostSort.css';
@@ -28,8 +28,9 @@ const Options = [
   (dispatch) => ({
     changeSort: (sort) => {
       dispatch(changeSort(sort));
-      dispatch(fetchPosts({ sort }));
-      return dispatch(recountVotes());
+      dispatch(fetchPosts({ sort })).then(() => {
+        dispatch(recountVotes());
+      });
     },
   })
 )
@@ -41,10 +42,11 @@ export default class PostSort extends Component {
 
   state = {
     menuOpen: false,
+    selectedSort: this.props.sort.sort,
   };
 
   onChangeSort = (sort) => {
-    this.setState({ menuOpen: false }, () => {
+    this.setState({ menuOpen: false, selectedSort: sort }, () => {
       this.props.changeSort(sort);
     });
   };
@@ -87,10 +89,8 @@ export default class PostSort extends Component {
   };
 
   render() {
-    const {
-      sort: { sort },
-    } = this.props;
-    const option = Options.find((option) => option.name === sort);
+    const { selectedSort } = this.state;
+    const option = Options.find((option) => option.name === selectedSort);
     return (
       <div className="postSort">
         <div className="text">Showing</div>
